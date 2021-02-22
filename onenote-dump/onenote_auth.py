@@ -69,7 +69,7 @@ def session_from_user_auth():
     )
     authorization_url, state = s.authorization_url(auth_url)
     logger.info('Launching browser to authorize... %s', authorization_url)
-    webbrowser.open(authorization_url)
+    # webbrowser.open(authorization_url)
 
     redirect_url = server.wait_for_auth_redirect()
     token = s.fetch_token(

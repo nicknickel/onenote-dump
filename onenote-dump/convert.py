@@ -106,12 +106,16 @@ class Converter:
             result += f'{content}\n'
             if not self.is_code_block(next_sibling_tag(tag)):
                 self.in_code_block = False
-                result += '```\n\n'
+                result += '```\n'
         elif self.is_quote_block(tag):
-            result = f'> {content}\n\n'
+            result = f'> {content}\n'
+        elif self.is_bold_text(tag):
+            result = f'**{content}**'
         else:
-            result = f'{content}\n\n'
+            result = f'{content}\n'
         return result
+
+    handle_span = handle_p
 
     def handle_a(self, tag, content):
         href = tag.get('href')
@@ -187,6 +191,13 @@ class Converter:
             tag
             and 'color:#595959' in tag.get('style')
             and 'font-style:italic' in tag.get('style')
+        )
+
+    @staticmethod
+    def is_bold_text(tag):
+        return (
+            tag
+            and 'font-weight:bold' in tag.get('style')
         )
 
     @staticmethod
