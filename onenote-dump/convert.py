@@ -60,6 +60,7 @@ class Converter:
                 content += self.handle_text(child)
             else:
                 content += self.handle_element(child)
+
         if isinstance(element, Tag):
             content = self.handle_tag(element, content)
         return content
@@ -147,7 +148,14 @@ class Converter:
             bullet = f'{self.index_in_parent(tag) + 1}.'
         else:
             bullet = '*'
-        return f'{" " * 4 * depth}{bullet} {content or ""}\n'
+
+        if content[-1] != '\n':
+            content = content + '\n'
+
+
+        # print(content)
+        # return f'{" " * 4 * depth}{bullet} {content or ""}\n'
+        return f'{" " * 4 * depth}{bullet} {content or ""}'
 
     def handle_tr(self, tag, content):
         result = f'|{content}\n'
@@ -189,14 +197,17 @@ class Converter:
     def is_quote_block(tag):
         return (
             tag
-            and 'color:#595959' in tag.get('style')
-            and 'font-style:italic' in tag.get('style')
+            and tag.get('style')
+            and (
+                'color:#595959' in tag.get('style') or 'font-style:italic' in tag.get('style')
+            )
         )
 
     @staticmethod
     def is_bold_text(tag):
         return (
             tag
+            and tag.get('style')
             and 'font-weight:bold' in tag.get('style')
         )
 
